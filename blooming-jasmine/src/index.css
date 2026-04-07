@@ -1,0 +1,10 @@
+/* stylelint-disable at-rule-no-unknown */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-[#1e1a3c] text-white;
+  font-family: 'Poppins', sans-serif;
+}
+/* stylelint-enable at-rule-no-unknown */

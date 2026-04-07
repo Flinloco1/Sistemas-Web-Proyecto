@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "titulo": "Continente",
+    "autor": "Adrian Aguirre",
+    "tipo": "Imagen",
+    "vistas": "0",
+    "favoritos": 0,
+    "imagen": "http://localhost:4000/uploads\\1763768352473-Continente_negro.webp",
+    "archivoReal": "http://localhost:4000/uploads\\1763768352473-Continente_negro.webp"
+  },
+  {
+    "id": 2,
+    "titulo": "Como un cenicero",
+    "autor": "Iggy Vargas",
+    "tipo": "Video",
+    "vistas": "0",
+    "favoritos": 0,
+    "imagen": "http://localhost:4000/uploads/video-default.png",
+    "archivoReal": "http://localhost:4000/uploads\\1764654597790-Como un cenicero.mkv"
+  },
+  {
+    "id": 3,
+    "titulo": "Azul",
+    "autor": "Teleazul",
+    "tipo": "Audio",
+    "vistas": "0",
+    "favoritos": 0,
+    "imagen": "http://localhost:4000/uploads/audio-default.png",
+    "archivoReal": "http://localhost:4000/uploads\\1764654671057-2025-11-25 14-39-14.mkv"
+  },
+  {
+    "id": 4,
+    "titulo": "Estrellas",
+    "autor": "Buen Cariño Dan",
+    "tipo": "Audio",
+    "vistas": "0",
+    "favoritos": 0,
+    "imagen": "http://localhost:4000/uploads/audio-default.png",
+    "archivoReal": "http://localhost:4000/uploads\\1764654724966-2025-11-25 14-45-05.mkv"
+  }
+]
