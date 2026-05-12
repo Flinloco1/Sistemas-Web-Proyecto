@@ -3,14 +3,16 @@ import multer from "multer";
 import cors from "cors";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 
-const proyectosPath = path.join("data", "proyectos.json");
-
+const proyectosPath = path.join(__dirname, "..", "data", "proyectos.json");
 
 function leerProyectos() {
   const data = fs.readFileSync(proyectosPath, "utf8");
@@ -23,7 +25,7 @@ function guardarProyectos(lista) {
 
 
 const storage = multer.diskStorage({
-  destination: "uploads/",
+  destination: path.join(__dirname, "..", "uploads"),
   filename: (req, file, cb) => {
     cb(null, Date.now() + "-" + file.originalname);
   },
@@ -38,7 +40,7 @@ app.use((req, res, next) => {
 });
 
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 
 
@@ -67,9 +69,9 @@ app.get("/proyectos", (req, res) => {
 app.post("/subir", upload.single("archivo"), (req, res) => {
   const proyectos = leerProyectos();
 
-  let urlArchivo = `http://localhost:4000/${req.file.path}`;
+  const nombreArchivo = req.file.filename;
+  let urlArchivo = `http://localhost:4000/uploads/${nombreArchivo}`;
 
- 
   let miniatura = urlArchivo; 
 
   if (req.body.tipo === "Audio") {
@@ -87,11 +89,7 @@ app.post("/subir", upload.single("archivo"), (req, res) => {
     tipo: req.body.tipo,
     vistas: "0",
     favoritos: 0,
-
-   
     imagen: miniatura,
-
-   
     archivoReal: urlArchivo,
   };
 
@@ -112,17 +110,14 @@ app.delete("/proyectos/:id", (req, res) => {
     return res.status(404).json({ error: "Proyecto no encontrado" });
   }
 
- 
   const archivoURL = proyecto.archivoReal || proyecto.imagen; 
-  const archivoRelativo = archivoURL.replace("http://localhost:4000/", "");
-  const rutaArchivo = path.join(process.cwd(), archivoRelativo);
+  const nombreArchivo = archivoURL.replace("http://localhost:4000/uploads/", "");
+  const rutaArchivo = path.join(__dirname, "..", "uploads", nombreArchivo);
 
- 
   if (fs.existsSync(rutaArchivo)) {
     fs.unlinkSync(rutaArchivo);
   }
 
-  
   proyectos = proyectos.filter((p) => p.id !== id);
   guardarProyectos(proyectos);
 

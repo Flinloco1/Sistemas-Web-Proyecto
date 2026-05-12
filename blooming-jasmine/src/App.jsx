@@ -3,33 +3,20 @@ import Navbar from "./components/Navbar";
 import Filtros from "./components/Filtros";
 import GridProyectos from "./components/GridProyectos";
 import PopupSubir from "./components/PopupSubir";
+import Register from "./components/Register";
+import Login from "./components/Login";
 
 function App() {
-
-  const eliminarProyecto = async (id) => {
-    try {
-      await fetch(`http://localhost:4000/proyectos/${id}`, {
-        method: "DELETE",
-      });
-
-      // eliminar del frontend
-      setProyectos((prev) => prev.filter((p) => p.id !== id));
-    } catch (error) {
-      console.error("Error eliminando proyecto:", error);
-    }
-  };
+  // Auth: null = no logueado, objeto = usuario logueado
+  const [usuario, setUsuario] = useState(null);
+  const [pantalla, setPantalla] = useState("registro"); // "registro" | "login"
 
   const [filtro, setFiltro] = useState("Todos");
   const [proyectos, setProyectos] = useState([]);
   const [mostrarPopup, setMostrarPopup] = useState(false);
-
-  // popup para ver proyecto
   const [proyectoActivo, setProyectoActivo] = useState(null);
-
-  // estado para el buscador
   const [busqueda, setBusqueda] = useState("");
 
-  // cargar desde backend
   const cargarProyectos = async () => {
     const res = await fetch("http://localhost:4000/proyectos");
     const data = await res.json();
@@ -37,10 +24,18 @@ function App() {
   };
 
   useEffect(() => {
-    cargarProyectos();
-  }, []);
+    if (usuario) cargarProyectos();
+  }, [usuario]);
 
-  // FILTRO FINAL = filtro por tipo + filtro por búsqueda
+  const eliminarProyecto = async (id) => {
+    try {
+      await fetch(`http://localhost:4000/proyectos/${id}`, { method: "DELETE" });
+      setProyectos((prev) => prev.filter((p) => p.id !== id));
+    } catch (error) {
+      console.error("Error eliminando proyecto:", error);
+    }
+  };
+
   const proyectosFiltrados = proyectos
     .filter((p) => (filtro === "Todos" ? true : p.tipo === filtro))
     .filter((p) => {
@@ -52,12 +47,32 @@ function App() {
       );
     });
 
+  // Si no está logueado, mostrar registro o login
+  if (!usuario) {
+    if (pantalla === "registro") {
+      return (
+        <Register
+          onRegistrado={(u) => setUsuario(u)}
+          irALogin={() => setPantalla("login")}
+        />
+      );
+    }
+    return (
+      <Login
+        onLogin={(u) => setUsuario(u)}
+        irARegistro={() => setPantalla("registro")}
+      />
+    );
+  }
+
+  // App principal
   return (
     <div>
-      {/* Navbar ahora recibe onBuscar */}
       <Navbar
         abrirPopup={() => setMostrarPopup(true)}
         onBuscar={(texto) => setBusqueda(texto)}
+        usuario={usuario}
+        onLogout={() => setUsuario(null)}
       />
 
       <h2 className="text-center text-2xl mt-6 font-semibold">
@@ -70,17 +85,17 @@ function App() {
         proyectos={proyectosFiltrados}
         onClickProyecto={setProyectoActivo}
         onEliminar={eliminarProyecto}
+        usuario={usuario}
       />
 
-      {/* POPUP SUBIR */}
       {mostrarPopup && (
         <PopupSubir
           cerrar={() => setMostrarPopup(false)}
           onSubido={(nuevo) => setProyectos([...proyectos, nuevo])}
+          usuario={usuario}
         />
       )}
 
-      {/* POPUP VER PROYECTO */}
       {proyectoActivo && (
         <div
           className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50"
@@ -97,24 +112,16 @@ function App() {
               ✖
             </button>
 
-            <h2 className="text-2xl font-bold mb-4">
-              {proyectoActivo.titulo}
-            </h2>
+            <h2 className="text-2xl font-bold mb-4">{proyectoActivo.titulo}</h2>
 
             {proyectoActivo.tipo === "Imagen" && (
-              <img
-                src={proyectoActivo.imagen}
-                alt=""
-                className="w-full rounded-lg"
-              />
+              <img src={proyectoActivo.imagen} alt="" className="w-full rounded-lg" />
             )}
-
             {proyectoActivo.tipo === "Audio" && (
               <audio controls className="w-full mt-4">
                 <source src={proyectoActivo.archivoReal} />
               </audio>
             )}
-
             {proyectoActivo.tipo === "Video" && (
               <video controls className="w-full mt-4 rounded-lg">
                 <source src={proyectoActivo.archivoReal} />
