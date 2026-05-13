@@ -1,7 +1,7 @@
 Blooming Jasmine es un sitio web que cuenta con las funciones principales de ser un arhivo digital y portafolio para diverso contenido artístico:
 Música, fotografía, pintura, cinematografía, etc.
 
-Tipos de Archivo Soportados:
+- Tipos de Archivo Soportados
 
 Imágenes: PNG, JPG, JPEG, GIF, WEBP, BMP, SVG
 
@@ -9,11 +9,11 @@ Videos: MP4, AVI, MOV, WMV, FLV, WEBM, MKV
 
 Audios: MP3, WAV, OGG, FLAC, AAC, M4A, WMA
 
-Límites:
+- Límites
 
 Tamaño máximo por archivo: 500 MB
 
-Funcionalidades:
+- Funcionalidades
 
 Página principal: Muestra estadísticas y archivos recientes.
 
@@ -23,5 +23,5 @@ Navegar: Explorar todos los archivos con filtros por tipo.
 
 Visualizar: Ver y descargar archivos individuales.
 
-Licencia:
+- Licencia
 Este proyecto es de código abierto y está disponible para uso educativo y personal.
